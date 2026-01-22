@@ -8,26 +8,25 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Import Map: Defines where to import libraries from -->
+    <script type="importmap">
+    {
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+            "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react"
+        }
+    }
+    </script>
     
-    <!-- React & ReactDOM (Production versions for stability) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel for JSX -->
+    <!-- Babel for JSX compilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Lucide React Icons (Updated to a stable modern version) -->
-    <script src="https://unpkg.com/lucide-react@0.468.0/dist/umd/lucide-react.min.js"></script>
 
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom scrollbar for better aesthetics */
+        /* Custom Scrollbar Styles */
         .scrollbar-thin::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
         .scrollbar-thin::-webkit-scrollbar-track {
             background: transparent;
@@ -43,53 +42,31 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
 
-    <script type="text/babel">
-        // Destructure React hooks
-        const { useState, useMemo, useEffect } = React;
-
-        // FIX: Destructure from 'lucideReact' (the correct global for version 0.468.0+)
-        const { 
-            Search, 
-            LayoutGrid, 
-            ExternalLink, 
-            Users, 
-            LifeBuoy, 
-            PieChart, 
-            Mail, 
-            Cloud, 
-            Shield, 
-            Terminal, 
-            BarChart3, 
-            MessageSquare, 
-            Briefcase, 
-            Database, 
-            CheckCircle2, 
-            ArrowRight, 
-            ShoppingCart, 
-            Zap, 
-            Globe, 
-            Layers, 
-            Sparkles, 
-            Lock, 
-            X, 
-            Plus, 
-            Trash2, 
-            Edit, 
-            Save, 
-            LogOut, 
-            Image: ImageIcon, // Renaming Image to ImageIcon
-            Upload, 
-            Settings, 
-            AlertTriangle, 
-            ChevronRight, 
-            Check,
-            Info
-        } = lucideReact;
+    <!-- Note: type="text/babel" and data-type="module" are crucial here -->
+    <script type="text/babel" data-type="module">
+        import React, { useState, useMemo, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+            Search, LayoutGrid, ExternalLink, Users, LifeBuoy, PieChart, Mail, Cloud, 
+            Shield, Terminal, BarChart3, MessageSquare, Briefcase, Database, 
+            CheckCircle2, ArrowRight, ShoppingCart, Zap, Globe, Layers, Sparkles, 
+            Lock, X, Plus, Trash2, Edit, Save, LogOut, Image as ImageIcon, Upload, 
+            Settings, AlertTriangle, ChevronRight, Check, Info 
+        } from 'lucide-react';
 
         // --- CONFIGURATION & DATA ---
 
@@ -278,11 +255,11 @@
 
                             <div className="text-center">
                                 <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-3 ${
-                                app.category === 'Operations' ? 'bg-blue-50 text-blue-600' :
-                                app.category === 'Support' ? 'bg-cyan-50 text-cyan-600' :
-                                'bg-violet-50 text-violet-600'
+                                    app.category === 'Operations' ? 'bg-blue-50 text-blue-600' :
+                                    app.category === 'Support' ? 'bg-cyan-50 text-cyan-600' :
+                                    'bg-violet-50 text-violet-600'
                                 }`}>
-                                {app.category}
+                                    {app.category}
                                 </span>
 
                                 <h3 className="text-xl font-bold text-slate-800 mb-2">{app.name}</h3>
@@ -584,9 +561,6 @@
                     {/* Decorative Background for Flow */}
                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-40 bg-gradient-to-r from-blue-50/0 via-blue-50/50 to-blue-50/0 pointer-events-none blur-3xl" />
 
-                    {/* UPDATED: increased pt-4 to pt-10 to prevent the absolute action buttons 
-                        (Edit/Delete) from being clipped by the container's top boundary.
-                    */}
                     <div className="overflow-x-auto pb-12 pt-10 hide-scrollbar relative z-10 px-4">
                         <div className="min-w-[900px]">
                             <div className="flex items-center justify-between mb-6 px-2">
@@ -625,7 +599,7 @@
                                                     <button 
                                                         onClick={() => onAddStep(index)}
                                                         className="w-6 h-6 rounded-full bg-white border-2 border-slate-200 text-slate-400 hover:border-blue-500 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all shadow-sm z-20 transform scale-90 hover:scale-110"
-                                                        title="Insert Step Here"
+                                                        title="Add Step at End"
                                                     >
                                                         <Plus size={14} strokeWidth={3} />
                                                     </button>
@@ -633,86 +607,86 @@
                                             )}
 
                                             <div className="relative flex flex-col items-center group">
-                                            {/* Step Interaction Wrapper */}
-                                            <button 
-                                                onClick={() => onSelectStep(isSelected ? null : step.id)}
-                                                className="group/btn relative z-10 focus:outline-none"
-                                            >
-                                                {/* Circle Container */}
-                                                <div className={`w-[70px] h-[70px] rounded-2xl flex items-center justify-center transition-all duration-500 relative border-4 
-                                                    ${isSelected 
-                                                    ? 'bg-blue-600 border-white text-white shadow-xl shadow-blue-500/40 -translate-y-2' 
-                                                    : 'bg-white border-white text-slate-400 hover:text-blue-500 shadow-lg shadow-slate-200/60 hover:-translate-y-1'
-                                                    }`}
+                                                {/* Step Interaction Wrapper */}
+                                                <button 
+                                                    onClick={() => onSelectStep(isSelected ? null : step.id)}
+                                                    className="group/btn relative z-10 focus:outline-none"
                                                 >
-                                                    <Icon size={26} strokeWidth={isSelected ? 2 : 1.5} className="transition-transform duration-500 group-hover/btn:scale-110" />
-                                                    
-                                                    {/* Number Badge */}
-                                                    <div className={`absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm transition-colors duration-300
+                                                    {/* Circle Container */}
+                                                    <div className={`w-[70px] h-[70px] rounded-2xl flex items-center justify-center transition-all duration-500 relative border-4 
                                                         ${isSelected 
-                                                        ? 'bg-amber-400 text-amber-900' 
-                                                        : 'bg-slate-100 text-slate-500 group-hover/btn:bg-blue-50 group-hover/btn:text-blue-600'
-                                                        }`}>
-                                                        {index + 1}
+                                                        ? 'bg-blue-600 border-white text-white shadow-xl shadow-blue-500/40 -translate-y-2' 
+                                                        : 'bg-white border-white text-slate-400 hover:text-blue-500 shadow-lg shadow-slate-200/60 hover:-translate-y-1'
+                                                        }`}
+                                                    >
+                                                        <Icon size={26} strokeWidth={isSelected ? 2 : 1.5} className="transition-transform duration-500 group-hover/btn:scale-110" />
+                                                        
+                                                        {/* Number Badge */}
+                                                        <div className={`absolute -top-3 -right-3 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 border-white shadow-sm transition-colors duration-300
+                                                            ${isSelected 
+                                                            ? 'bg-amber-400 text-amber-900' 
+                                                            : 'bg-slate-100 text-slate-500 group-hover/btn:bg-blue-50 group-hover/btn:text-blue-600'
+                                                            }`}>
+                                                            {index + 1}
+                                                        </div>
                                                     </div>
-                                                </div>
 
-                                                {/* Ripple/Glow effect for selected */}
-                                                {isSelected && (
-                                                    <>
-                                                    <div className="absolute inset-0 bg-blue-500 rounded-2xl animate-ping opacity-20 duration-1000"></div>
-                                                    <div className="absolute -inset-4 bg-gradient-to-t from-blue-500/20 to-transparent blur-xl rounded-full -z-10"></div>
-                                                    </>
+                                                    {/* Ripple/Glow effect for selected */}
+                                                    {isSelected && (
+                                                        <>
+                                                            <div className="absolute inset-0 bg-blue-500 rounded-2xl animate-ping opacity-20 duration-1000"></div>
+                                                            <div className="absolute -inset-4 bg-gradient-to-t from-blue-500/20 to-transparent blur-xl rounded-full -z-10"></div>
+                                                        </>
+                                                    )}
+                                                </button>
+
+                                                {/* Edit & Delete Buttons for Process Step (Admin Only) */}
+                                                {isAdmin && (
+                                                    <div className="absolute -top-4 -right-8 flex gap-1 z-20">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                onEditStep(step);
+                                                            }}
+                                                            className="p-1.5 bg-white text-slate-500 hover:text-blue-600 rounded-full shadow-md border border-slate-100 hover:bg-blue-50 transition-colors"
+                                                            title="Edit Step"
+                                                        >
+                                                            <Edit size={10} />
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                onDeleteStep(step.id);
+                                                            }}
+                                                            className="p-1.5 bg-white text-slate-500 hover:text-red-600 rounded-full shadow-md border border-slate-100 hover:bg-red-50 transition-colors"
+                                                            title="Delete Step"
+                                                        >
+                                                            <Trash2 size={10} />
+                                                        </button>
+                                                    </div>
                                                 )}
-                                            </button>
-
-                                            {/* Edit & Delete Buttons for Process Step (Admin Only) */}
-                                            {isAdmin && (
-                                                <div className="absolute -top-4 -right-8 flex gap-1 z-20">
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onEditStep(step);
-                                                        }}
-                                                        className="p-1.5 bg-white text-slate-500 hover:text-blue-600 rounded-full shadow-md border border-slate-100 hover:bg-blue-50 transition-colors"
-                                                        title="Edit Step"
-                                                    >
-                                                        <Edit size={10} />
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            onDeleteStep(step.id);
-                                                        }}
-                                                        className="p-1.5 bg-white text-slate-500 hover:text-red-600 rounded-full shadow-md border border-slate-100 hover:bg-red-50 transition-colors"
-                                                        title="Delete Step"
-                                                    >
-                                                        <Trash2 size={10} />
-                                                    </button>
+                                                
+                                                {/* Label */}
+                                                <div className={`mt-3 text-center transition-all duration-300 w-32 px-1
+                                                    ${isSelected ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-70 group-hover:opacity-100'}`}
+                                                >
+                                                    <span className={`block text-xs font-bold leading-tight mb-1 transition-colors ${isSelected ? 'text-blue-700' : 'text-slate-600'}`}>
+                                                        {step.title}
+                                                    </span>
+                                                    <span className="block text-[10px] text-slate-400 font-semibold tracking-wide uppercase">
+                                                        {step.description}
+                                                    </span>
                                                 </div>
-                                            )}
-                                            
-                                            {/* Label */}
-                                            <div className={`mt-3 text-center transition-all duration-300 w-32 px-1
-                                                ${isSelected ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-70 group-hover:opacity-100'}`}
-                                            >
-                                                <span className={`block text-xs font-bold leading-tight mb-1 transition-colors ${isSelected ? 'text-blue-700' : 'text-slate-600'}`}>
-                                                {step.title}
-                                                </span>
-                                                <span className="block text-[10px] text-slate-400 font-semibold tracking-wide uppercase">
-                                                {step.description}
-                                                </span>
-                                            </div>
 
-                                            {/* Active Indicator Arrow */}
-                                            <div className={`absolute -bottom-12 transition-all duration-500 ease-out ${isSelected ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-                                                <div className="flex flex-col items-center">
-                                                    <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-blue-600 mb-1"></div>
-                                                    <div className="px-4 py-1 bg-blue-600 text-white text-[9px] font-bold rounded-full shadow-lg shadow-blue-500/30 whitespace-nowrap tracking-wide">
-                                                    ACTIVE
+                                                {/* Active Indicator Arrow */}
+                                                <div className={`absolute -bottom-12 transition-all duration-500 ease-out ${isSelected ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+                                                    <div className="flex flex-col items-center">
+                                                        <div className="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-blue-600 mb-1"></div>
+                                                        <div className="px-4 py-1 bg-blue-600 text-white text-[9px] font-bold rounded-full shadow-lg shadow-blue-500/30 whitespace-nowrap tracking-wide">
+                                                            ACTIVE
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </div>
                                         </React.Fragment>
                                     );
@@ -737,7 +711,7 @@
             );
         };
 
-        const AppCard = ({ app, isAdmin, onEdit, onDelete, onShowInfo, onDragStart, onDrop, onDragOver }) => {
+        const AppCard = ({ app, isAdmin, onEdit, onDelete, onShowInfo, onDragStart, onDragOver, onDrop }) => {
             return (
                 <div 
                     className={`relative group h-full transition-transform duration-200 ${isAdmin ? 'cursor-move active:scale-95' : ''}`}
@@ -776,41 +750,41 @@
                             <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${app.color} shadow-lg ${app.shadow} 
                                 flex items-center justify-center overflow-hidden mb-3
                                 group-hover/card:scale-105 transition-all duration-500 ease-out`}>
-                            
-                            {app.imageUrl ? (
-                                <img src={app.imageUrl} alt={app.name} className="w-full h-full object-cover" />
-                            ) : (
-                                <span className="text-white font-bold text-xl drop-shadow-md">{app.name.charAt(0)}</span>
-                            )}
+                                
+                                {app.imageUrl ? (
+                                    <img src={app.imageUrl} alt={app.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-white font-bold text-xl drop-shadow-md">{app.name.charAt(0)}</span>
+                                )}
 
-                            {/* Inner Gloss */}
-                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-black/0 via-white/20 to-white/0 pointer-events-none" />
+                                {/* Inner Gloss */}
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-black/0 via-white/20 to-white/0 pointer-events-none" />
                             </div>
                             
                             <h3 className="text-sm font-bold text-slate-800 line-clamp-2 px-1">
-                            {app.name}
+                                {app.name}
                             </h3>
                         </div>
 
                         {/* Action Buttons Row */}
                         <div className="grid grid-cols-2 gap-2 mt-auto w-full">
-                        <button 
-                            onClick={() => onShowInfo(app)}
-                            className="flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-blue-600 transition-colors border border-transparent hover:border-slate-200"
-                            title="About Application"
-                        >
-                            <Info size={14} /> <span>About</span>
-                        </button>
-                        
-                        <a 
-                            href={app.url || '#'} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors border border-blue-100"
-                            title="Open Application"
-                        >
-                            <ExternalLink size={14} /> <span>Open</span>
-                        </a>
+                            <button 
+                                onClick={() => onShowInfo(app)}
+                                className="flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-slate-500 bg-slate-50 hover:bg-slate-100 hover:text-blue-600 transition-colors border border-transparent hover:border-slate-200"
+                                title="About Application"
+                            >
+                                <Info size={14} /> <span>About</span>
+                            </button>
+                            
+                            <a 
+                                href={app.url || '#'} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors border border-blue-100"
+                                title="Open Application"
+                            >
+                                <ExternalLink size={14} /> <span>Open</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -851,7 +825,6 @@
             const [isAdmin, setIsAdmin] = useState(false);
             const [isLoginOpen, setIsLoginOpen] = useState(false);
             const [deleteConfirmation, setDeleteConfirmation] = useState({ isOpen: false, appId: null });
-            // NEW: Confirmation state for deleting steps to ensure UX consistency and functionality
             const [stepDeleteConfirmation, setStepDeleteConfirmation] = useState({ isOpen: false, stepId: null });
                 
             // App Editor Modal
@@ -880,7 +853,7 @@
                     const matchesSearch = 
                         app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         app.description.toLowerCase().includes(searchQuery.toLowerCase());
-                    const matchesCategory = selectedCategory === 'All' || !selectedCategory || app.category === selectedCategory;
+                    const matchesCategory = selectedCategory === 'All' || app.category === selectedCategory;
                     return matchesSearch && matchesCategory;
                 });
             }, [apps, searchQuery, selectedCategory, selectedProcessStep, processSteps]);
@@ -923,6 +896,19 @@
                         shadow: 'shadow-blue-500/30'
                     };
                     setApps([...apps, newApp]);
+
+                    // NEW: Automatically link new app to selected process step
+                    if (selectedProcessStep) {
+                        setProcessSteps(prevSteps => prevSteps.map(step => {
+                            if (step.id === selectedProcessStep) {
+                                return {
+                                    ...step,
+                                    appIds: [...step.appIds, newId]
+                                };
+                            }
+                            return step;
+                        }));
+                    }
                 }
                 setIsAppEditorOpen(false);
                 setEditingApp(null);
@@ -942,7 +928,6 @@
                 }
             };
 
-            // NEW: Handler to finalize step deletion
             const confirmDeleteStep = () => {
                 if (stepDeleteConfirmation.stepId) {
                     setProcessSteps(processSteps.filter(s => s.id !== stepDeleteConfirmation.stepId));
@@ -991,7 +976,6 @@
                 setIsStepEditorOpen(true);
             };
 
-            // UPDATED: Now triggers the modal instead of window.confirm
             const handleDeleteProcessStep = (stepId) => {
                 setStepDeleteConfirmation({ isOpen: true, stepId });
             };
@@ -1007,7 +991,6 @@
                 }
             };
 
-            // Drag and Drop Handlers
             const handleDragStart = (e, id) => {
                 setDraggedAppId(id);
                 e.dataTransfer.effectAllowed = "move";
@@ -1028,7 +1011,6 @@
 
                 if (oldIndex === -1 || newIndex === -1) return;
 
-                // Move element
                 const [removed] = updatedApps.splice(oldIndex, 1);
                 updatedApps.splice(newIndex, 0, removed);
 
@@ -1063,7 +1045,6 @@
                         message="Are you sure you want to delete this application? This action cannot be undone."
                     />
 
-                    {/* NEW: Confirmation Modal for Process Steps */}
                     <ConfirmationModal
                         isOpen={stepDeleteConfirmation.isOpen}
                         onClose={() => setStepDeleteConfirmation({ isOpen: false, stepId: null })}
@@ -1124,13 +1105,13 @@
                                 </div>
                                 <div className="flex flex-col">
                                     {isAdmin ? (
-                                    <input 
-                                        value={logoText}
-                                        onChange={(e) => setLogoText(e.target.value)}
-                                        className="font-extrabold text-slate-800 text-xl tracking-tight bg-transparent border-b border-dashed border-slate-300 focus:outline-none focus:border-blue-600 min-w-[100px]"
-                                    />
+                                        <input 
+                                            value={logoText}
+                                            onChange={(e) => setLogoText(e.target.value)}
+                                            className="font-extrabold text-slate-800 text-xl tracking-tight bg-transparent border-b border-dashed border-slate-300 focus:outline-none focus:border-blue-600 min-w-[100px]"
+                                        />
                                     ) : (
-                                    <span className="font-extrabold text-slate-800 text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">{logoText}</span>
+                                        <span className="font-extrabold text-slate-800 text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">{logoText}</span>
                                     )}
                                     <span className="text-[10px] font-bold tracking-widest text-slate-400 uppercase hidden sm:block">Temukan Disini</span>
                                 </div>
@@ -1155,8 +1136,8 @@
                             <div className="flex items-center gap-2 md:gap-4 shrink-0">
                                 <div className="hidden lg:flex items-center text-xs font-bold text-slate-500 bg-white/50 border border-white px-4 py-2 rounded-full shadow-sm">
                                     <span className="relative flex h-2.5 w-2.5 mr-2.5">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                                     </span>
                                     Systems Operational
                                 </div>
@@ -1192,37 +1173,37 @@
                         
                         {/* Admin Toolbar */}
                         {isAdmin && (
-                        <div className="mb-6 p-4 bg-slate-900 text-white rounded-2xl shadow-xl flex items-center justify-between animate-in slide-in-from-top-4 border border-slate-700/50">
-                            <div className="flex items-center gap-4">
-                                <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
-                                <Settings size={20} className="text-blue-300" />
+                            <div className="mb-6 p-4 bg-slate-900 text-white rounded-2xl shadow-xl flex items-center justify-between animate-in slide-in-from-top-4 border border-slate-700/50">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
+                                        <Settings size={20} className="text-blue-300" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-base">Configuration Mode</h3>
+                                    </div>
                                 </div>
-                                <div>
-                                <h3 className="font-bold text-base">Configuration Mode</h3>
-                                </div>
+                                <button 
+                                    onClick={openNewAppModal}
+                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-600/25 hover:-translate-y-0.5"
+                                >
+                                    <Plus size={16} /> Add App
+                                </button>
                             </div>
-                            <button 
-                                onClick={openNewAppModal}
-                                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-bold text-sm transition-all shadow-lg shadow-blue-600/25 hover:-translate-y-0.5"
-                            >
-                                <Plus size={16} /> Add App
-                            </button>
-                        </div>
                         )}
 
                         {/* Process Flow */}
                         {!searchQuery && (
-                        <ProcessFlowViewer 
-                            selectedStep={selectedProcessStep} 
-                            onSelectStep={handleStepSelect}
-                            steps={processSteps}
-                            sectionTitle={processSectionTitle}
-                            onEditSectionTitle={setProcessSectionTitle}
-                            onEditStep={handleEditStep}
-                            onAddStep={handleAddProcessStep}
-                            onDeleteStep={handleDeleteProcessStep}
-                            isAdmin={isAdmin}
-                        />
+                            <ProcessFlowViewer 
+                                selectedStep={selectedProcessStep} 
+                                onSelectStep={handleStepSelect}
+                                steps={processSteps}
+                                sectionTitle={processSectionTitle}
+                                onEditSectionTitle={setProcessSectionTitle}
+                                onEditStep={handleEditStep}
+                                onAddStep={handleAddProcessStep}
+                                onDeleteStep={handleDeleteProcessStep}
+                                isAdmin={isAdmin}
+                            />
                         )}
 
                         {/* Controls & Filters */}
@@ -1230,115 +1211,113 @@
                             <div className="flex flex-col md:flex-row items-center justify-between border-b border-slate-200/50 pb-4 gap-4">
                                 
                                 <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                                {!selectedProcessStep && categories.map(cat => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => {
-                                            // Toggle logic: If clicking the already selected category, deselect it (set to null)
-                                            if (selectedCategory === cat) {
-                                            setSelectedCategory(null);
-                                            } else {
-                                            setSelectedCategory(cat);
-                                            }
-                                            setSelectedProcessStep(null);
-                                        }}
-                                        className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 border ${
-                                            selectedCategory === cat && !selectedProcessStep
-                                            ? 'bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/20' 
-                                            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                                        }`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
+                                    {!selectedProcessStep && categories.map(cat => (
+                                        <button
+                                            key={cat}
+                                            onClick={() => {
+                                                if (selectedCategory === cat) {
+                                                    setSelectedCategory(null);
+                                                } else {
+                                                    setSelectedCategory(cat);
+                                                }
+                                                setSelectedProcessStep(null);
+                                            }}
+                                            className={`px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 border ${
+                                                selectedCategory === cat && !selectedProcessStep
+                                                    ? 'bg-slate-900 text-white border-slate-900 shadow-md shadow-slate-900/20' 
+                                                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
+                                            }`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    ))}
                                 </div>
                                 
-                                {/* Show Clear Filters if there is a search, a category selected (not null), or a process step */}
                                 {(searchQuery || selectedCategory !== null || selectedProcessStep) && (
-                                <button 
-                                    onClick={() => { 
-                                        setSearchQuery(''); 
-                                        setSelectedCategory(null); 
-                                        setSelectedProcessStep(null);
-                                    }}
-                                    className="group flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-full text-xs font-bold hover:bg-red-100 transition-colors"
-                                >
-                                    <X size={14} />
-                                    Clear Filters
-                                </button>
+                                    <button 
+                                        onClick={() => { 
+                                            setSearchQuery(''); 
+                                            setSelectedCategory(null); 
+                                            setSelectedProcessStep(null);
+                                        }}
+                                        className="group flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-full text-xs font-bold hover:bg-red-100 transition-colors"
+                                    >
+                                        <X size={14} />
+                                        Clear Filters
+                                    </button>
                                 )}
                             </div>
 
                             {/* Grid Section */}
                             {filteredApps.length > 0 ? (
                                 <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
-                                {selectedProcessStep && (
-                                    <div className="flex items-center justify-between mb-6 bg-blue-50/50 border border-blue-100 p-4 rounded-2xl backdrop-blur-sm">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 bg-white rounded-xl text-blue-600 shadow-sm border border-blue-50">
-                                                <Layers size={20} />
+                                    {selectedProcessStep && (
+                                        <div className="flex items-center justify-between mb-6 bg-blue-50/50 border border-blue-100 p-4 rounded-2xl backdrop-blur-sm">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-white rounded-xl text-blue-600 shadow-sm border border-blue-50">
+                                                    <Layers size={20} />
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Process Filter Active</p>
+                                                    <p className="text-base font-bold text-slate-800">
+                                                        Showing apps for <span className="text-blue-600">{processSteps.find(s => s.id === selectedProcessStep)?.title}</span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-0.5">Process Filter Active</p>
-                                                <p className="text-base font-bold text-slate-800">
-                                                Showing apps for <span className="text-blue-600">{processSteps.find(s => s.id === selectedProcessStep)?.title}</span>
-                                                </p>
-                                            </div>
+                                            <span className="px-3 py-1.5 bg-white rounded-lg text-lg font-black text-blue-600 shadow-sm border border-blue-50">
+                                                {filteredApps.length}
+                                            </span>
                                         </div>
-                                        <span className="px-3 py-1.5 bg-white rounded-lg text-lg font-black text-blue-600 shadow-sm border border-blue-50">
-                                            {filteredApps.length}
-                                        </span>
-                                    </div>
-                                )}
-                                
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6 pb-12">
-                                    {filteredApps.map((app) => (
-                                    <AppCard 
-                                        key={app.id} 
-                                        app={app} 
-                                        isAdmin={isAdmin}
-                                        onEdit={openEditAppModal}
-                                        onDelete={promptDeleteApp}
-                                        onShowInfo={setSelectedAppForInfo}
-                                        onDragStart={handleDragStart}
-                                        onDragOver={handleDragOver}
-                                        onDrop={handleDrop}
-                                    />
-                                    ))}
-                                    
-                                    {/* Add New Card Button (Visible in Admin Mode) */}
-                                    {isAdmin && (
-                                    <button 
-                                        onClick={openNewAppModal}
-                                        className="group flex flex-col items-center justify-center h-full min-h-[160px] bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-300"
-                                    >
-                                        <div className="p-3 bg-white rounded-full shadow-sm text-slate-400 group-hover:text-blue-500 group-hover:scale-110 transition-all mb-2">
-                                            <Plus size={24} />
-                                        </div>
-                                        <span className="font-bold text-slate-500 group-hover:text-blue-600 text-sm">Add New</span>
-                                    </button>
                                     )}
-                                </div>
+                                    
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6 pb-12">
+                                        {filteredApps.map((app) => (
+                                            <AppCard 
+                                                key={app.id} 
+                                                app={app} 
+                                                isAdmin={isAdmin}
+                                                onEdit={openEditAppModal}
+                                                onDelete={promptDeleteApp}
+                                                onShowInfo={setSelectedAppForInfo}
+                                                onDragStart={handleDragStart}
+                                                onDragOver={handleDragOver}
+                                                onDrop={handleDrop}
+                                            />
+                                        ))}
+                                        
+                                        {/* Add New Card Button (Visible in Admin Mode) */}
+                                        {isAdmin && (
+                                            <button 
+                                                onClick={openNewAppModal}
+                                                className="group flex flex-col items-center justify-center h-full min-h-[160px] bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-300 hover:border-blue-400 hover:bg-blue-50/50 transition-all duration-300"
+                                            >
+                                                <div className="p-3 bg-white rounded-full shadow-sm text-slate-400 group-hover:text-blue-500 group-hover:scale-110 transition-all mb-2">
+                                                    <Plus size={24} />
+                                                </div>
+                                                <span className="font-bold text-slate-500 group-hover:text-blue-600 text-sm">Add New</span>
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             ) : (searchQuery || selectedCategory !== null || selectedProcessStep) ? (
                                 <div className="text-center py-16 bg-white/40 backdrop-blur-md rounded-3xl border-2 border-dashed border-slate-200">
-                                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-50 mb-4 shadow-inner">
-                                    <Search className="h-8 w-8 text-slate-300" />
-                                </div>
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">No results found</h3>
-                                <p className="text-slate-500 mb-6 max-w-md mx-auto text-base">
-                                    We couldn't find any apps matching your current criteria. Try adjusting your search keywords.
-                                </p>
-                                <button 
-                                    onClick={() => { 
-                                        setSearchQuery(''); 
-                                        setSelectedCategory(null); 
-                                        setSelectedProcessStep(null);
-                                    }}
-                                    className="px-6 py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/20 transition-all"
-                                >
-                                    Reset Search
-                                </button>
+                                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-50 mb-4 shadow-inner">
+                                        <Search className="h-8 w-8 text-slate-300" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-2">No results found</h3>
+                                    <p className="text-slate-500 mb-6 max-w-md mx-auto text-base">
+                                        We couldn't find any apps matching your current criteria. Try adjusting your search keywords.
+                                    </p>
+                                    <button 
+                                        onClick={() => { 
+                                            setSearchQuery(''); 
+                                            setSelectedCategory(null); 
+                                            setSelectedProcessStep(null);
+                                        }}
+                                        className="px-6 py-2.5 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-900/20 transition-all"
+                                    >
+                                        Reset Search
+                                    </button>
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-6 animate-in fade-in duration-700">
@@ -1355,7 +1334,7 @@
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const root = createRoot(document.getElementById('root'));
         root.render(<Dashboard />);
     </script>
 </body>
